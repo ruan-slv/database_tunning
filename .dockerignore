@@ -1,0 +1,7 @@
+.git
+.gitignore
+*.csv
+*.md
+*.sql
+!script.sql
+docker-compose.yml

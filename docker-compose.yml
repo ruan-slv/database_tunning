@@ -1,0 +1,24 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_DATABASE: tunning
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-benchmark-local-only}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./limpo.sql:/work/limpo.sql:ro
+      - ./sujo.sql:/work/sujo.sql:ro
+      - ./benchmark/benchmark.sql:/work/benchmark.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+volumes:
+  mysql_data:
